@@ -8,6 +8,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
     long_description = f.read()
 
+requirements = [
+    'argparse',
+]
 
 setup(
     name="stratocumulus",
@@ -33,9 +36,7 @@ setup(
     keywords="Cloud computing",
     packages=find_packages(),
     setup_requires=["setuptools_scm"],
-    install_requires=[
-        l.strip() for l in Path("requirements.txt").read_text("utf-8").splitlines()
-    ],
+    install_requires=requirements,
     python_requires=">= 3",
     entry_points={"console_scripts": ["strato=strato.__main__:main"]},
 )
