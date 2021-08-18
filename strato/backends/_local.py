@@ -17,3 +17,20 @@ class LocalBackend:
         call_args.extend(filenames)
         print(' '.join(call_args))
         check_call(call_args)
+
+    def sync(self, source, target):
+        call_args = ['rsync', '-r', source, target]
+        print(' '.join(call_args))
+        check_call(call_args)
+
+    def delete(self, recursive, filenames):
+        call_args = ['rm']
+        if recursive:
+            call_args.append('-r')
+        call_args.extend(filenames)
+        print(' '.join(call_args))
+        check_call(call_args)
+
+    def stat(self, filename):
+        call_args = ['stat', filename]
+        check_call(call_args)
