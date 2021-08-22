@@ -11,9 +11,18 @@ class AWSBackend:
         call_args.extend(['cp', '--only-show-errors'])
         if recursive:
             call_args.append('--recursive')
-        call_args.extend(filenames)
-        print(' '.join(call_args))
-        check_call(call_args)
+
+        source_files = filenames[:-1]
+        target = filenames[-1]
+        if len(source_files) > 1 and target[-1] != '/':
+            target += '/'
+
+        # Copy files one by one.
+        for source in source_files:
+            subcall_args = call_args.copy()
+            subcall_args.extend([source, target])
+            print(' '.join(subcall_args))
+            check_call(subcall_args)
 
     def sync(self, source, target):
         call_args = self._call_prefix.copy()
@@ -26,9 +35,13 @@ class AWSBackend:
         call_args.extend(['rm', '--quiet'])
         if recursive:
             call_args.append('--recursive')
-        call_args.extend(filenames)
-        print(' '.join(call_args))
-        check_call(call_args)
+
+        # Delete files one by one.
+        for f in filenames:
+            subcall_args = call_args.copy()
+            subcall_args.append(f)
+            print(' '.join(subcall_args))
+            check_call(subcall_args)
 
     def stat(self, filename):
         call_args = self._call_prefix.copy()
