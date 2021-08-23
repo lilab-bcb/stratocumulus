@@ -32,7 +32,7 @@ class GCPBackend:
         call_args.append('rm')
         if recursive:
             call_args.append('-r')
-        call_args.extend(call_args)
+        call_args.extend(filenames)
         print(' '.join(call_args))
         check_call(call_args)
 

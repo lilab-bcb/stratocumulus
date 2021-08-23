@@ -1,3 +1,4 @@
+import os
 from subprocess import check_call
 
 class LocalBackend:
@@ -19,7 +20,8 @@ class LocalBackend:
         check_call(call_args)
 
     def sync(self, source, target):
-        call_args = ['rsync', '-r', source, target]
+        target = os.path.dirname(target)
+        call_args = ['rsync', '-r', '--delete', source, target]
         print(' '.join(call_args))
         check_call(call_args)
 
