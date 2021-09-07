@@ -1,3 +1,4 @@
+import shutil
 from subprocess import check_call
 
 
@@ -6,8 +7,9 @@ class GCPBackend:
         self._backend = 'gcp'
         self._call_prefix = ['gsutil', '-q', '-o', 'GSUtil:parallel_composite_upload_threshold=150M']
 
-    def copy(self, recursive, parallel, filenames):
-        call_args = self._call_prefix.copy()
+    def copy(self, recursive, parallel, ionice, filenames):
+        call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
+        call_args += self._call_prefix
         if parallel:
             call_args.append('-m')
         call_args.append('cp')
@@ -17,8 +19,9 @@ class GCPBackend:
         print(' '.join(call_args))
         check_call(call_args)
 
-    def sync(self, parallel, source, target):
-        call_args = self._call_prefix.copy()
+    def sync(self, parallel, ionice, source, target):
+        call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
+        call_args += self._call_prefix
         if parallel:
             call_args.append('-m')
         call_args.extend(['rsync', '-d', '-r', source, target])

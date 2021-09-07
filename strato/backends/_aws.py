@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from subprocess import check_call
 
 
@@ -7,8 +7,9 @@ class AWSBackend:
         self._backend = 'aws'
         self._call_prefix = ['aws', 's3']
 
-    def copy(self, filenames):
-        call_args = self._call_prefix.copy()
+    def copy(self, ionice, filenames):
+        call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
+        call_args += self._call_prefix
         call_args.extend(['cp', '--only-show-errors'])
 
         source_files = filenames[:-1]
@@ -30,8 +31,9 @@ class AWSBackend:
             print(' '.join(subcall_args))
             check_call(subcall_args)
 
-    def sync(self, source, target):
-        call_args = self._call_prefix.copy()
+    def sync(self, ionice, source, target):
+        call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
+        call_args += self._call_prefix
         call_args.extend(['sync', '--delete', '--only-show-errors', source, target])
         print(' '.join(call_args))
         check_call(call_args)
