@@ -13,7 +13,7 @@ def main():
     command_name = my_args.command
     command_args = my_args.command_args
     cmd = command_list[command_list_strings.index(command_name)]
-    sys.argv[0] = cmd.__file__
+    sys.argv[0] = f"strato {my_args.command}"
     cmd.main(command_args)
 
 if __name__ == "__main__":
