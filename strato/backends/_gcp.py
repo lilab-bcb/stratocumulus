@@ -20,6 +20,12 @@ class GCPBackend:
         check_call(call_args)
 
     def sync(self, parallel, ionice, source, target):
+        # If target folder is local.
+        if len(target.split('://')) == 1:
+            import os
+            if not os.path.exists(target):
+                os.mkdir(target)
+
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
         if parallel:
