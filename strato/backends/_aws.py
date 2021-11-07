@@ -1,5 +1,6 @@
 import os, shutil
-from subprocess import check_call
+import boto3
+from subprocess import check_call, CalledProcessError
 
 
 class AWSBackend:
@@ -52,6 +53,24 @@ class AWSBackend:
             check_call(subcall_args)
 
     def stat(self, filename):
+        assert filename.startswith("s3://"), "Must be an S3 URI!"
+
         call_args = self._call_prefix.copy()
-        call_args.extend(['cp', '--quiet', '--dryrun', filename, 'null'])
-        check_call(call_args)
+        is_folder = True if filename[-1]=='/' else False
+
+        if is_folder:
+            fn_list = filename[5:].split('/')
+            bucket = fn_list[0]
+            folder = '/'.join(fn_list[1:]) if len(fn_list) > 1 else ""
+            resp = boto3.client('s3').list_objects_v2(
+                Bucket = bucket,
+                Prefix = folder,
+            )
+            if resp['KeyCount'] == 0:
+                raise CalledProcessError(
+                    returncode=1,
+                    cmd=['strato command'],
+                )
+        else:
+            call_args.extend(['cp', '--quiet', '--dryrun', filename, '.'])
+            check_call(call_args)
