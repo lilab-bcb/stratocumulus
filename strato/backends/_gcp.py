@@ -46,6 +46,7 @@ class GCPBackend:
         check_call(call_args)
 
     def stat(self, filename):
+        assert filename.startswith("gs://"), "Must be a GS URI!"
         is_folder = True if filename[-1]=='/' else False
 
         if is_folder:
