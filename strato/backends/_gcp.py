@@ -46,5 +46,11 @@ class GCPBackend:
         check_call(call_args)
 
     def stat(self, filename):
-        call_args = ['gsutil', '-q', 'stat', filename]
+        is_folder = True if filename[-1]=='/' else False
+
+        if is_folder:
+            call_args = ['gsutil', '-q', 'stat', filename + '*']
+        else:
+            call_args = ['gsutil', '-q', 'stat', filename]
+
         check_call(call_args)
