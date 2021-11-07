@@ -3,6 +3,20 @@ import boto3
 from subprocess import check_call, CalledProcessError
 
 
+def parse_wildcard(filepath):
+    fp_list = filepath[5:].split('/')
+    wd_idx = -1
+    for i in range(len(fp_list)):
+        if '*' in fp_list[i]:
+            wd_idx = i
+            break
+    assert wd_idx != -1, "The given path doesn't contain wildcard!"
+
+    parent_folder = "s3://" + '/'.join(fp_list[0:wd_idx])
+    wildcard = '/'.join(fp_list[wd_idx:])
+
+    return parent_folder, wildcard
+
 class AWSBackend:
     def __init__(self):
         self._backend = 'aws'
@@ -22,7 +36,11 @@ class AWSBackend:
         for source in source_files:
             subcall_args = call_args.copy()
             subcall_target = target
-            if source[-1] == '/':
+            if ('*' in source) and (source.startswith('s3://')): # S3 URI containing wildcards
+                parent_folder, wildcard = parse_wildcard(source)
+                subcall_args.extend(['--recursive', '--include', f"\"{wildcard}\""])
+                source = parent_folder + '/'
+            elif source[-1] == '/': # copy an S3 folder
                 subcall_args.append('--recursive')
                 if subcall_target[-1] != '/':
                     subcall_target = subcall_target + '/' + os.path.basename(source)
