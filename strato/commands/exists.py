@@ -18,7 +18,7 @@ def check_status(backend, filename):
         be.stat(filename)
 
 def main(argsv):
-    parser = argparse.ArgumentParser(description="Check if a file or folder's path exists. Break if doesn't exist.")
+    parser = argparse.ArgumentParser(description="Check if a file or folder's path exists. Break if doesn't exist. Notice that a folder path must end with '/'.")
     parser.add_argument('--backend', dest='backend', action='store', required=True, help='Specify which backend to use. Available options: aws, gcp, local.')
     parser.add_argument('filename', metavar='filename', type=str, help='A file or folder path.')
 
