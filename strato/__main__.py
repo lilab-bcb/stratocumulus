@@ -1,5 +1,5 @@
-import sys
-from strato.commands import *
+import argparse, sys
+from strato.commands import cp, sync, rm, exists
 
 try:
     from importlib.metadata import version

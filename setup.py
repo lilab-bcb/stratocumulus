@@ -30,7 +30,7 @@ setup(
         "Topic :: Software Development :: Build Tools",
     ],
     keywords="Cloud computing",
-    packages=find_packages(include=['strato']),
+    packages=find_packages(),
     setup_requires=["setuptools_scm"],
     install_requires=[
         l.strip() for l in Path("requirements.txt").read_text("utf-8").splitlines()
