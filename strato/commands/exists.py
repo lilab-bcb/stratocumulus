@@ -1,6 +1,12 @@
 import argparse
 
 
+example_text = """Examples:
+  strato exists --backend aws s3://my-bucket/file1
+  strato exists --backend gcp gs://my-bucket/folder2/
+  strato exists --backend local folder2/
+"""
+
 def check_status(backend, filename):
     assert backend in ['aws', 'gcp', 'local'], "Backend not supported!"
 
@@ -18,7 +24,11 @@ def check_status(backend, filename):
         be.stat(filename)
 
 def main(argsv):
-    parser = argparse.ArgumentParser(description="Check if a file or folder's path exists. Break if doesn't exist. Notice that a folder path must end with '/'.")
+    parser = argparse.ArgumentParser(
+        description="Check the existence of a file or folder, and raise an exception if not existing. \nNotice that a folder's path must end with '/'.",
+        epilog=example_text,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument('--backend', dest='backend', action='store', required=True, help='Specify which backend to use. Available options: aws, gcp, local.')
     parser.add_argument('filename', metavar='filename', type=str, help='A file or folder path.')
 
