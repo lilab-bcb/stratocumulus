@@ -1,6 +1,12 @@
 import argparse
 
 
+example_text = """Examples:
+  strato sync --backend aws source_folder s3://my-bucket/target_folder
+  strato sync --backend gcp -m --ionice source_folder gs://my-bucket/target_folder
+  strato sync --backend local source_folder target_folder
+"""
+
 def synchronize_folders(backend, parallel, ionice, source, target):
     assert backend in ['aws', 'gcp', 'local'], "Backend not supported!"
 
@@ -18,7 +24,11 @@ def synchronize_folders(backend, parallel, ionice, source, target):
         be.sync(ionice, source, target)
 
 def main(argsv):
-    parser = argparse.ArgumentParser(description="Synchronize source and target folders.")
+    parser = argparse.ArgumentParser(
+        description="Synchronize source and target folders.\nNotice that this synchronization deletes extra files in the target folder not found in the source folder.",
+        epilog=example_text,
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument('--backend', dest='backend', action='store', required=True, help='Specify which backend to use. Available options: aws, gcp, local.')
     parser.add_argument('-m', dest='parallel', action='store_true', help="Run operations in parallel. Only available for GCP backend.")
     parser.add_argument('--ionice', dest='ionice', action='store_true', help="Run with ionice to avoid monopolizing local disk's I/O. Only available for Linux.")

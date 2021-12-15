@@ -123,9 +123,9 @@ See examples below::
    # AWS
    strato exists --backend aws s3://my-bucket/file1
    # GCP
-   strato exists --backend gcp gs://my-bucket/folder2
+   strato exists --backend gcp gs://my-bucket/folder2/
    # Local Machine
-   strato exists --backend local folder2
+   strato exists --backend local folder2/
 
 Notice that this command works for both file and folder, regardless of backend.
 
