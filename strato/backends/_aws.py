@@ -1,7 +1,7 @@
 import os, shutil
 import boto3
 from subprocess import check_call, CalledProcessError
-
+from typing import Optional
 
 def parse_wildcard(filepath):
     fp_list = filepath[5:].split('/')
@@ -22,10 +22,12 @@ class AWSBackend:
         self._backend = 'aws'
         self._call_prefix = ['aws', 's3']
 
-    def copy(self, ionice, filenames):
+    def copy(self, ionice, filenames, profile: Optional[str] = None):
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
         call_args.extend(['cp', '--only-show-errors'])
+        if profile:
+            call_args.extend(['--profile', profile])
 
         source_files = filenames[:-1]
         target = filenames[-1]
@@ -50,16 +52,21 @@ class AWSBackend:
             print(' '.join(subcall_args))
             check_call(subcall_args)
 
-    def sync(self, ionice, source, target):
+    def sync(self, ionice, source, target, profile: Optional[str] = None):
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
+        if profile:
+            call_args.extend(['--profile', profile])
         call_args.extend(['sync', '--delete', '--only-show-errors', source, target])
         print(' '.join(call_args))
         check_call(call_args)
 
-    def delete(self, filenames):
+    def delete(self, filenames, profile: Optional[str] = None):
         call_args = self._call_prefix.copy()
         call_args.extend(['rm', '--only-show-errors'])
+
+        if profile:
+            call_args.extend(['--profile', profile])
 
         # Delete files one by one.
         for f in filenames:
@@ -70,7 +77,7 @@ class AWSBackend:
             print(' '.join(subcall_args))
             check_call(subcall_args)
 
-    def stat(self, filename):
+    def stat(self, filename, profile: Optional[str] = None):
         assert filename.startswith("s3://"), "Must be an S3 URI!"
 
         call_args = self._call_prefix.copy()
