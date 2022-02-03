@@ -7,7 +7,7 @@ class GCPBackend:
         self._backend = 'gcp'
         self._call_prefix = ['gsutil', '-q', '-o', 'GSUtil:parallel_composite_upload_threshold=150M']
 
-    def copy(self, recursive, parallel, ionice, filenames):
+    def copy(self, recursive, parallel, ionice, filenames, quiet):
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
         if parallel:
@@ -16,10 +16,11 @@ class GCPBackend:
         if recursive:
             call_args.append('-r')
         call_args.extend(filenames)
-        print(' '.join(call_args))
+        if not quiet:
+            print(' '.join(call_args))
         check_call(call_args)
 
-    def sync(self, parallel, ionice, source, target):
+    def sync(self, parallel, ionice, source, target, quiet):
         # If target folder is local.
         if len(target.split('://')) == 1:
             import os
@@ -31,10 +32,11 @@ class GCPBackend:
         if parallel:
             call_args.append('-m')
         call_args.extend(['rsync', '-d', '-r', source, target])
-        print(' '.join(call_args))
+        if not quiet:
+            print(' '.join(call_args))
         check_call(call_args)
 
-    def delete(self, recursive, parallel, filenames):
+    def delete(self, recursive, parallel, filenames, quiet):
         call_args = self._call_prefix.copy()
         if parallel:
             call_args.append('-m')
@@ -42,7 +44,8 @@ class GCPBackend:
         if recursive:
             call_args.append('-r')
         call_args.extend(filenames)
-        print(' '.join(call_args))
+        if not quiet:
+            print(' '.join(call_args))
         check_call(call_args)
 
     def stat(self, filename):

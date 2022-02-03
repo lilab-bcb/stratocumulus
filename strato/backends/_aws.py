@@ -22,7 +22,7 @@ class AWSBackend:
         self._backend = 'aws'
         self._call_prefix = ['aws', 's3']
 
-    def copy(self, ionice, filenames, profile: Optional[str] = None):
+    def copy(self, ionice, filenames, profile, quiet):
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
         call_args.extend(['cp', '--only-show-errors'])
@@ -49,19 +49,21 @@ class AWSBackend:
                 else:
                     subcall_target = subcall_target + os.path.basename(source)
             subcall_args.extend([source, subcall_target])
-            print(' '.join(subcall_args))
+            if not quiet:
+                print(' '.join(subcall_args))
             check_call(subcall_args)
 
-    def sync(self, ionice, source, target, profile: Optional[str] = None):
+    def sync(self, ionice, source, target, profile, quiet):
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
         if profile is not None:
             call_args.extend(['--profile', profile])
         call_args.extend(['sync', '--delete', '--only-show-errors', source, target])
-        print(' '.join(call_args))
+        if not quiet:
+            print(' '.join(call_args))
         check_call(call_args)
 
-    def delete(self, filenames, profile: Optional[str] = None):
+    def delete(self, filenames, profile, quiet):
         call_args = self._call_prefix.copy()
         call_args.extend(['rm', '--only-show-errors'])
 
@@ -74,10 +76,11 @@ class AWSBackend:
             if f[-1] == '/':
                 subcall_args.append('--recursive')
             subcall_args.append(f)
-            print(' '.join(subcall_args))
+            if not quiet:
+                print(' '.join(subcall_args))
             check_call(subcall_args)
 
-    def stat(self, filename, profile: Optional[str] = None):
+    def stat(self, filename, profile):
         assert filename.startswith("s3://"), "Must be an S3 URI!"
 
         call_args = self._call_prefix.copy()

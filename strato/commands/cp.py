@@ -1,5 +1,4 @@
 import argparse
-from typing import Optional
 
 example_text = """Examples:
   # AWS upload
@@ -17,21 +16,22 @@ example_text = """Examples:
   strato cp --backend local -r file1 folder2 /target_folder/
 """
 
-def copy_files(backend, recursive, parallel, ionice, filenames, profile: Optional[str] = None):
+def copy_files(backend, recursive, parallel, ionice, filenames, profile, quiet):
     assert backend in ['aws', 'gcp', 'local'], "Backend not supported!"
+    print(quiet)
 
     if backend == 'aws':
         from strato.backends import AWSBackend
         be = AWSBackend()
-        be.copy(ionice, filenames, profile)
+        be.copy(ionice, filenames, profile, quiet)
     elif backend == 'gcp':
         from strato.backends import GCPBackend
         be = GCPBackend()
-        be.copy(recursive, parallel, ionice, filenames)
+        be.copy(recursive, parallel, ionice, filenames, quiet)
     else:
         from strato.backends import LocalBackend
         be = LocalBackend()
-        be.copy(recursive, ionice, filenames)
+        be.copy(recursive, ionice, filenames, quiet)
 
 
 def main(argsv):
@@ -45,7 +45,8 @@ def main(argsv):
     parser.add_argument('-m', dest='parallel', action='store_true', help="Run operations in parallel. Only available for GCP backend.")
     parser.add_argument('--ionice', dest='ionice', action='store_true', help="Run with ionice to avoid monopolizing local disk's I/O. Only available for Linux.")
     parser.add_argument('--profile', dest='profile', type=str, action='store', help='AWS profile. Only works for aws backend, and use the default profile if not provided.')
+    parser.add_argument('--quiet', dest='quiet', action='store_true', help="Hide the underlying cloud command.")
     parser.add_argument('files', metavar='filenames', type=str, nargs='+', help='List of file paths.')
 
     args = parser.parse_args(argsv)
-    copy_files(args.backend, args.recursive, args.parallel, args.ionice, args.files, args.profile)
+    copy_files(args.backend, args.recursive, args.parallel, args.ionice, args.files, args.profile, args.quiet)

@@ -1,5 +1,4 @@
 import argparse
-from typing import Optional
 
 
 example_text = """Examples:
@@ -8,7 +7,7 @@ example_text = """Examples:
   strato exists --backend local folder2/
 """
 
-def check_status(backend, filename, profile: Optional[str] = None):
+def check_status(backend, filename, profile):
     assert backend in ['aws', 'gcp', 'local'], "Backend not supported!"
 
     if backend == 'aws':
