@@ -18,7 +18,6 @@ example_text = """Examples:
 
 def copy_files(backend, recursive, parallel, ionice, filenames, profile, quiet):
     assert backend in ['aws', 'gcp', 'local'], "Backend not supported!"
-    print(quiet)
 
     if backend == 'aws':
         from strato.backends import AWSBackend
