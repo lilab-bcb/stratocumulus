@@ -26,7 +26,7 @@ class AWSBackend:
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
         call_args.extend(['cp', '--only-show-errors'])
-        if profile:
+        if profile is not None:
             call_args.extend(['--profile', profile])
 
         source_files = filenames[:-1]
@@ -55,7 +55,7 @@ class AWSBackend:
     def sync(self, ionice, source, target, profile: Optional[str] = None):
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice') != None) else []
         call_args += self._call_prefix
-        if profile:
+        if profile is not None:
             call_args.extend(['--profile', profile])
         call_args.extend(['sync', '--delete', '--only-show-errors', source, target])
         print(' '.join(call_args))
@@ -65,7 +65,7 @@ class AWSBackend:
         call_args = self._call_prefix.copy()
         call_args.extend(['rm', '--only-show-errors'])
 
-        if profile:
+        if profile is not None:
             call_args.extend(['--profile', profile])
 
         # Delete files one by one.
@@ -87,7 +87,8 @@ class AWSBackend:
             fn_list = filename[5:].split('/')
             bucket = fn_list[0]
             folder = '/'.join(fn_list[1:]) if len(fn_list) > 1 else ""
-            resp = boto3.client('s3').list_objects_v2(
+            session = boto3.Session(profile_name=profile)
+            resp = session.client('s3').list_objects_v2(
                 Bucket = bucket,
                 Prefix = folder,
             )
@@ -98,4 +99,6 @@ class AWSBackend:
                 )
         else:
             call_args.extend(['cp', '--quiet', '--dryrun', filename, '.'])
+            if profile is not None:
+                call_args.extend(['--profile', profile])
             check_call(call_args)

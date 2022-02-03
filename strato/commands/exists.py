@@ -36,4 +36,4 @@ def main(argsv):
 
     args = parser.parse_args(argsv)
 
-    check_status(args.backend, args.filename)
+    check_status(args.backend, args.filename, args.profile)
