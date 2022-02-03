@@ -13,7 +13,7 @@ def main():
     parser.add_argument('command', help='The command', choices=command_list_strings)
     parser.add_argument('command_args', help='The command arguments', nargs=argparse.REMAINDER)
     parser.add_argument('-v', '--version', action="version", version=version('stratocumulus'))
-
+ 
     my_args = parser.parse_args()
     command_name = my_args.command
     command_args = my_args.command_args
