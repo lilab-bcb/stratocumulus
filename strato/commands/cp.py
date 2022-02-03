@@ -44,7 +44,7 @@ def main(argsv):
     parser.add_argument('-r', dest='recursive', action='store_true', help="Recursive copy. Not needed for AWS backend.")
     parser.add_argument('-m', dest='parallel', action='store_true', help="Run operations in parallel. Only available for GCP backend.")
     parser.add_argument('--ionice', dest='ionice', action='store_true', help="Run with ionice to avoid monopolizing local disk's I/O. Only available for Linux.")
-    parser.add_argument('--profile', dest='profile', type=str, action='store', help='AWS profile.')
+    parser.add_argument('--profile', dest='profile', type=str, action='store', help='AWS profile. Only works for aws backend, and use the default profile if not provided.')
     parser.add_argument('files', metavar='filenames', type=str, nargs='+', help='List of file paths.')
 
     args = parser.parse_args(argsv)

@@ -31,7 +31,7 @@ def main(argsv):
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument('--backend', dest='backend', action='store', required=True, help='Specify which backend to use. Available options: aws, gcp, local.')
-    parser.add_argument('--profile', dest='profile', type=str, action='store', help='AWS profile.')
+    parser.add_argument('--profile', dest='profile', type=str, action='store', help='AWS profile. Only works for aws backend, and use the default profile if not provided.')
     parser.add_argument('filename', metavar='filename', type=str, help='A file or folder path.')
 
     args = parser.parse_args(argsv)
