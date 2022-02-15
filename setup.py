@@ -15,7 +15,7 @@ setup(
     description="Stratocumulus is the backend component of Cumulus.",
     long_description=long_description,
     url="https://github.com/lilab-bcb/stratocumulus",
-    author="Yiming Yang, Bo Li",
+    author="Yiming Yang, Rimte Rocher, Bo Li",
     author_email="cumulus-support@googlegroups.com",
     classifiers=[  # https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "Development Status :: 3 - Alpha",
