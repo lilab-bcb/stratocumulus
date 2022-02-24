@@ -38,9 +38,10 @@ class AWSBackend:
         for source in source_files:
             subcall_args = call_args.copy()
             subcall_target = target
-            if ('*' in source) and (source.startswith('s3://')): # S3 URI containing wildcards
+            if ('*' in source) and (source.startswith('s3://')):
+                # S3 URI containing wildcards
                 parent_folder, wildcard = parse_wildcard(source)
-                subcall_args.extend(['--recursive', '--include', f"\"{wildcard}\""])
+                subcall_args.extend(['--recursive', '--exclude', '*', '--include', f'{wildcard}', '--dryrun'])
                 source = parent_folder + '/'
             elif source[-1] == '/': # copy an S3 folder
                 subcall_args.append('--recursive')
