@@ -4,7 +4,8 @@ from subprocess import check_call, CalledProcessError
 from typing import Optional
 
 def parse_wildcard(filepath):
-    fp_list = filepath[5:].split('/')
+    prefix = "s3://" if filepath.startswith("s3://") else ""
+    fp_list = filepath[5:].split('/') if prefix == "s3://" else filepath.split('/')
     wd_idx = -1
     for i in range(len(fp_list)):
         if '*' in fp_list[i]:
@@ -12,7 +13,7 @@ def parse_wildcard(filepath):
             break
     assert wd_idx != -1, "The given path doesn't contain wildcard!"
 
-    parent_folder = "s3://" + '/'.join(fp_list[0:wd_idx])
+    parent_folder = prefix + '/'.join(fp_list[0:wd_idx])
     wildcard = '/'.join(fp_list[wd_idx:])
 
     return parent_folder, wildcard
@@ -38,8 +39,8 @@ class AWSBackend:
         for source in source_files:
             subcall_args = call_args.copy()
             subcall_target = target
-            if ('*' in source) and (source.startswith('s3://')):
-                # S3 URI containing wildcards
+            if '*' in source:
+                # Path containing wildcard(s)
                 parent_folder, wildcard = parse_wildcard(source)
                 subcall_args.extend(['--recursive', '--exclude', '*', '--include', f'{wildcard}'])
                 source = parent_folder + '/'
