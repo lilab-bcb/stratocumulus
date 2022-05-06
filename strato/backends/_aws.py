@@ -1,7 +1,7 @@
 import os, shutil
 import boto3
 from subprocess import check_call, CalledProcessError
-from typing import Optional
+
 
 def parse_wildcard(filepath):
     prefix = "s3://" if filepath.startswith("s3://") else ""
@@ -14,6 +14,9 @@ def parse_wildcard(filepath):
     assert wd_idx != -1, "The given path doesn't contain wildcard!"
 
     parent_folder = prefix + '/'.join(fp_list[0:wd_idx])
+    if parent_folder == "" and prefix == "":
+        parent_folder = "."
+
     wildcard = '/'.join(fp_list[wd_idx:])
 
     return parent_folder, wildcard
