@@ -23,6 +23,8 @@ def parse_wildcard(filepath):
 
 class AWSBackend:
     def __init__(self):
+        if shutil.which('aws') is None:
+            raise Exception("aws-cli is not installed!")
         self._backend = 'aws'
         self._call_prefix = ['aws', 's3']
 

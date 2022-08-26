@@ -4,6 +4,8 @@ from subprocess import check_call
 
 class GCPBackend:
     def __init__(self):
+        if shutil.which('gsutil') is None:
+            raise Exception("google-cloud-sdk is not installed!")
         self._backend = 'gcp'
         self._call_prefix = ['gsutil', '-q', '-o', 'GSUtil:parallel_composite_upload_threshold=150M']
 

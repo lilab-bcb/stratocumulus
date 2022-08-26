@@ -22,6 +22,8 @@ class LocalBackend:
         check_call(call_args)
 
     def sync(self, ionice, source, target, quiet):
+        if shutil.which('rsync') is None:
+            raise Exception("rsync is not installed!")
         target = os.path.dirname(target)
         call_args = ['ionice', '-c', '2', '-n', '7'] if ionice and (shutil.which('ionice')) != None else []
         call_args += ['rsync', '-r', '--delete', source, target]
