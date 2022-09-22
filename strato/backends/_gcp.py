@@ -15,7 +15,6 @@ class GCPBackend:
         ]
 
     def copy(self, recursive, parallel, ionice, filenames, quiet, dryrun):
-        # FIXME gsutil cp -r gs://foo/bar/ foo/ does not copy anything whereas gsutil cp -r gs://foo/bar foo/ does
         # FIXME make local target directories to mimic behavior of aws and local backends
         call_args = (
             ["ionice", "-c", "2", "-n", "7"]
