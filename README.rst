@@ -50,18 +50,18 @@ These commands have options specific to backend. For now, Stratocumulus supports
 This command copies file(s) or folder(s). See examples below::
 
    # AWS upload
-   strato cp --backend aws file1 folder2 s3://my-bucket/target_folder/
+   strato cp file1 folder2 s3://my-bucket/target_folder/
    # AWS download
-   strato cp --backend aws s3://my-bucket/source_folder/*.zip /target_folder/
+   strato cp s3://my-bucket/source_folder/*.zip /target_folder/
 
    # GCP upload
-   strato cp --backend gcp -m -r --ionice file1 folder2 gs://my-bucket/target_folder/
+   strato cp -m -r --ionice file1 folder2 gs://my-bucket/target_folder/
    # GCP download
    mkdir /target_folder
-   strato cp --backend gcp -m gs://my-bucket/source_folder/*.zip /target_folder/
+   strato cp -m gs://my-bucket/source_folder/*.zip /target_folder/
 
    # Local Machine
-   strato cp --backend local -r file1 folder2 /target_folder/
+   strato cp -r file1 folder2 /target_folder/
 
 Notice that:
 
@@ -81,11 +81,11 @@ This command synchronizes two folders. Notice that this synchronization will del
 See examples below::
 
    # AWS
-   strato sync --backend aws source_folder s3://my-bucket/target_folder
+   strato sync source_folder s3://my-bucket/target_folder
    # GCP
-   strato sync --backend gcp -m --ionice source_folder gs://my-bucket/target_folder
+   strato sync -m --ionice source_folder gs://my-bucket/target_folder
    # Local Machine
-   strato sync --backend local source_folder target_folder
+   strato sync source_folder target_folder
 
 Notice that:
 
@@ -99,11 +99,11 @@ For details on the options, try command ``strato sync -h``.
 This command deletes file(s) or folder(s). See examples below::
 
    # AWS
-   strato rm --backend aws s3://my-bucket/file1 s3://my-bucket/folder2/
+   strato rm s3://my-bucket/file1 s3://my-bucket/folder2/
    # GCP
-   strato rm --backend gcp -m gs://my-bucket/file1 gs://my-bucket/folder2 gs://my-bucket/folder3/*.zip
+   strato rm -m gs://my-bucket/file1 gs://my-bucket/folder2 gs://my-bucket/folder3/*.zip
    # Local Machine
-   strato rm --backend local file1 folder2
+   strato rm file1 folder2
 
 Notice that:
 
@@ -121,11 +121,11 @@ Otherwise, the command will break with Python ``subprocess.CalledProcessError`` 
 See examples below::
 
    # AWS
-   strato exists --backend aws s3://my-bucket/file1
+   strato exists s3://my-bucket/file1
    # GCP
-   strato exists --backend gcp gs://my-bucket/folder2/
+   strato exists gs://my-bucket/folder2/
    # Local Machine
-   strato exists --backend local folder2/
+   strato exists folder2/
 
 Notice that this command works for both file and folder, regardless of backend.
 
