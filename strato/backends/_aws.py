@@ -2,8 +2,6 @@ import os
 import shutil
 from subprocess import CalledProcessError, check_call
 
-import boto3
-
 
 def parse_wildcard(filepath):
     prefix = "s3://" if filepath.startswith("s3://") else ""
@@ -108,6 +106,8 @@ class AWSBackend:
         is_folder = True if filename[-1] == "/" else False
 
         if is_folder:
+            import boto3
+
             fn_list = filename[5:].split("/")
             bucket = fn_list[0]
             folder = "/".join(fn_list[1:]) if len(fn_list) > 1 else ""
