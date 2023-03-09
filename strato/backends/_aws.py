@@ -56,8 +56,10 @@ class AWSBackend:
                 parent_folder, wildcard = parse_wildcard(source)
                 subcall_args.extend(["--recursive", "--exclude", "*", "--include", f"{wildcard}"])
                 source = parent_folder + "/"
-            elif source[-1] == "/":  # copy an S3 folder
+            elif source[-1] == "/" or os.path.isdir(source):  # copy an S3 folder
                 subcall_args.append("--recursive")
+                if source[-1] != "/":
+                    source = source + "/"
                 if subcall_target[-1] != "/":
                     subcall_target = subcall_target + "/" + os.path.basename(source)
                 else:
