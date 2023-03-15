@@ -27,7 +27,7 @@ def copy_files(recursive, parallel, ionice, filenames, profile, quiet, dryrun):
         from strato.backends import AWSBackend
 
         be = AWSBackend()
-        be.copy(ionice, filenames, profile, quiet, dryrun)
+        be.copy(recursive, ionice, filenames, profile, quiet, dryrun)
     elif backend == "gcp":
         from strato.backends import GCPBackend
 

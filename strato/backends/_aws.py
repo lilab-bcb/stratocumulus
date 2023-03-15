@@ -31,7 +31,7 @@ class AWSBackend:
         self._backend = "aws"
         self._call_prefix = ["aws", "s3"]
 
-    def copy(self, ionice, filenames, profile, quiet, dryrun):
+    def copy(self, recursive, ionice, filenames, profile, quiet, dryrun):
         call_args = (
             ["ionice", "-c", "2", "-n", "7"]
             if ionice and (shutil.which("ionice") is not None)
@@ -47,7 +47,7 @@ class AWSBackend:
         if len(source_files) > 1 and target[-1] != "/":
             target += "/"
 
-        # Copy files one by one.
+        # Copy source files one by one.
         for source in source_files:
             subcall_args = call_args.copy()
             subcall_target = target
@@ -56,14 +56,14 @@ class AWSBackend:
                 parent_folder, wildcard = parse_wildcard(source)
                 subcall_args.extend(["--recursive", "--exclude", "*", "--include", f"{wildcard}"])
                 source = parent_folder + "/"
-            elif source[-1] == "/" or os.path.isdir(source):  # copy an S3 folder
+            elif recursive:  # copy folder
                 subcall_args.append("--recursive")
+
                 if source[-1] != "/":
                     source = source + "/"
                 if subcall_target[-1] != "/":
-                    subcall_target = subcall_target + "/" + os.path.basename(source)
-                else:
-                    subcall_target = subcall_target + os.path.basename(source)
+                    subcall_target = subcall_target + "/"
+                subcall_target = subcall_target + os.path.basename(source[:-1])
             subcall_args.extend([source, subcall_target])
             if not quiet or dryrun:
                 print(" ".join(subcall_args))
