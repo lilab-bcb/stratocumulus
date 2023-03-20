@@ -113,6 +113,7 @@ class AWSBackend:
             folder = "/".join(fn_list[1:]) if len(fn_list) > 1 else ""
 
             from s3fs import S3FileSystem
+
             s3 = S3FileSystem(anon=False, profile=profile)
             if len(s3.ls(f"s3://{bucket}/{folder}")) == 0:
                 raise CalledProcessError(
