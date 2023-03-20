@@ -1,3 +1,5 @@
+import pytest
+
 from strato.commands import cp
 from strato.tests.helpers import gsutil
 
@@ -7,11 +9,17 @@ def test_cp_file_aws(capsys):
     assert "aws s3 cp --only-show-errors file1 s3://foo/bar/\n" == capsys.readouterr().out
 
 
-def test_cp_dir_aws(capsys):
-    # FIXME Local path must have slash for recursive copy. Recursive flag ignored
-    cp.main(["file1/", "s3://foo/bar", "--dryrun"])
+@pytest.fixture(scope="module", params=[True, False])
+def trailing_slash(request):
+    return request.param
+
+
+def test_cp_dir_aws(capsys, trailing_slash):
+    cp.main(["dir1", "s3://foo/bar" + "/" if trailing_slash else "", "-r", "--dryrun"])
+
     assert (
-        "aws s3 cp --only-show-errors --recursive file1/ s3://foo/bar/\n" == capsys.readouterr().out
+        "aws s3 cp --only-show-errors --recursive dir1/ s3://foo/bar/dir1\n"
+        == capsys.readouterr().out
     )
 
 
@@ -21,8 +29,8 @@ def test_cp_file_gcp(capsys):
 
 
 def test_cp_dir_gcp(capsys):
-    cp.main(["file1", "gs://foo/bar", "-r", "--dryrun"])
-    assert gsutil + " cp -r file1 gs://foo/bar\n" == capsys.readouterr().out
+    cp.main(["dir1", "gs://foo/bar", "-r", "--dryrun"])
+    assert gsutil + " cp -r dir1 gs://foo/bar\n" == capsys.readouterr().out
 
 
 def test_cp_file_local(capsys):
