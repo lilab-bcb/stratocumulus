@@ -108,17 +108,14 @@ class AWSBackend:
         is_folder = True if filename[-1] == "/" else False
 
         if is_folder:
-            import boto3
-
             fn_list = filename[5:].split("/")
             bucket = fn_list[0]
             folder = "/".join(fn_list[1:]) if len(fn_list) > 1 else ""
-            session = boto3.Session(profile_name=profile)
-            resp = session.client("s3").list_objects_v2(
-                Bucket=bucket,
-                Prefix=folder,
-            )
-            if resp["KeyCount"] == 0:
+
+            from s3fs import S3FileSystem
+
+            s3 = S3FileSystem(anon=False, profile=profile)
+            if len(s3.ls(f"s3://{bucket}/{folder}")) == 0:
                 raise CalledProcessError(
                     returncode=1,
                     cmd=["strato command"],
