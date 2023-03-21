@@ -31,7 +31,10 @@ classifiers = [
 ]
 
 requires-python = '>=3'
-dependencies = ['boto3']
+dependencies = [
+    's3fs',
+    'importlib_metadata >= 0.7; python_version < "3.8"',
+]
 
 [project.optional-dependencies]
 
