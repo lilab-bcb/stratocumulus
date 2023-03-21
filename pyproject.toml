@@ -9,7 +9,7 @@ name = 'stratocumulus'
 description = 'File backend component of Cumulus'
 readme = 'README.rst'
 authors = [
-    { name = "Yiming Yang, Rimte Rocher, Bo Li", email = "cumulus-support@googlegroups.com" },
+    { name = "Yiming Yang, Joshua Gould, Rimte Rocher, Bo Li", email = "cumulus-support@googlegroups.com" },
 ]
 urls.Source = 'https://github.com/lilab-bcb/stratocumulus'
 urls.Documentation = "https://github.com/lilab-bcb/stratocumulus"
