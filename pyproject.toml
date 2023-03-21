@@ -37,12 +37,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-
-test = [
-    'pytest',
-]
-
-
+test = ['pytest']
 
 [tool.black]
 line-length = 100
