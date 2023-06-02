@@ -10,11 +10,12 @@ class LocalBackend:
     def copy(self, recursive, ionice, filenames, quiet, dryrun):
         assert len(filenames) >= 2, "Either source or destination is missing!"
         target = filenames[-1]
-        call_args1 = ["mkdir", "-p", target]
-        if not quiet or dryrun:
-            print(" ".join(call_args1))
-        if not dryrun:
-            check_call(call_args1)
+        if recursive:  # only create intermediate directories if copying recursively
+            call_args1 = ["mkdir", "-p", target]
+            if not quiet or dryrun:
+                print(" ".join(call_args1))
+            if not dryrun:
+                check_call(call_args1)
 
         call_args = (
             ["ionice", "-c", "2", "-n", "7"]

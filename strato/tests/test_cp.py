@@ -15,7 +15,7 @@ def trailing_slash(request):
 
 
 def test_cp_dir_aws(capsys, trailing_slash):
-    cp.main(["dir1", "s3://foo/bar" + "/" if trailing_slash else "", "-r", "--dryrun"])
+    cp.main(["dir1", "s3://foo/bar" + ("/" if trailing_slash else ""), "-r", "--dryrun"])
 
     assert (
         "aws s3 cp --only-show-errors --recursive dir1/ s3://foo/bar/dir1\n"
@@ -34,6 +34,10 @@ def test_cp_dir_gcp(capsys):
 
 
 def test_cp_file_local(capsys):
-    # FIXME only the parent directory should be created
     cp.main(["file1", "/bar/foo", "--dryrun"])
-    assert "mkdir -p /bar/foo\ncp file1 /bar/foo\n" == capsys.readouterr().out
+    assert "cp file1 /bar/foo\n" == capsys.readouterr().out
+
+
+def test_cp_dir_local(capsys):
+    cp.main(["file1", "/bar/foo", "-r", "--dryrun"])
+    assert "mkdir -p /bar/foo\ncp -r file1 /bar/foo\n" == capsys.readouterr().out
