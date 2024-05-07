@@ -18,9 +18,13 @@ class LocalBackend:
         for path in filenames[:-1]:
             if "*" in path:
                 f_list = glob.glob(path)
-                source_files.extend(f_list)
+                if len(f_list) > 0:
+                    source_files.extend(f_list)
+                else:
+                    print(f"Cannot find '{path}'!")
             else:
                 source_files.append(path)
+        assert len(source_files) > 0, "Source file(s) cannot be empty!"
 
         # if copying recursively or there are multiple source files,
         # assume target is directory, otherwise assume target is file path
