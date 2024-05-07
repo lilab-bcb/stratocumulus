@@ -1,4 +1,5 @@
 import os
+import glob
 import shutil
 from pathlib import Path
 from subprocess import check_call
@@ -11,8 +12,24 @@ class LocalBackend:
     def copy(self, recursive, ionice, filenames, quiet, dryrun):
         assert len(filenames) >= 2, "Either source or destination is missing!"
         target = filenames[-1]
-        # if copying recursively, assume target is directory, otherwise assume target is file path
-        call_args1 = ["mkdir", "-p", target if recursive else str(Path(target).parent)]
+
+        # If source contains wildcard, expand it.
+        source_files = []
+        for path in filenames[:-1]:
+            if "*" in path:
+                f_list = glob.glob(path)
+                source_files.extend(f_list)
+            else:
+                source_files.append(path)
+
+        # if copying recursively or there are multiple source files,
+        # assume target is directory, otherwise assume target is file path
+        call_args1 = [
+            "mkdir",
+            "-p",
+            target if recursive or len(source_files) > 1 else str(Path(target).parent),
+        ]
+
         if not quiet or dryrun:
             print(" ".join(call_args1))
         if not dryrun:
@@ -26,7 +43,7 @@ class LocalBackend:
         call_args += ["cp"]
         if recursive:
             call_args.append("-r")
-        call_args.extend(filenames)
+        call_args.extend(source_files + [target])
         if not quiet or dryrun:
             print(" ".join(call_args))
         if not dryrun:
