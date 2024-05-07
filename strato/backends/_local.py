@@ -1,6 +1,6 @@
 import os
-import shutil
 import glob
+import shutil
 from pathlib import Path
 from subprocess import check_call
 
@@ -16,7 +16,7 @@ class LocalBackend:
         # If source contains wildcard, expand it.
         source_files = []
         for path in filenames[:-1]:
-            if '*' in path:
+            if "*" in path:
                 f_list = glob.glob(path)
                 source_files.extend(f_list)
             else:
@@ -24,7 +24,11 @@ class LocalBackend:
 
         # if copying recursively or there are multiple source files,
         # assume target is directory, otherwise assume target is file path
-        call_args1 = ["mkdir", "-p", target if recursive or len(source_files) > 1 else str(Path(target).parent)]
+        call_args1 = [
+            "mkdir",
+            "-p",
+            target if recursive or len(source_files) > 1 else str(Path(target).parent),
+        ]
 
         if not quiet or dryrun:
             print(" ".join(call_args1))
