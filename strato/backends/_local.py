@@ -56,12 +56,17 @@ class LocalBackend:
     def sync(self, ionice, source, target, quiet, dryrun):
         if shutil.which("rsync") is None:
             raise Exception("rsync is not installed!")
-        target = os.path.dirname(target)
+        #target = os.path.dirname(target)
+        os.makedirs(target, exist_ok=True)
         call_args = (
             ["ionice", "-c", "2", "-n", "7"]
             if ionice and (shutil.which("ionice")) is not None
             else []
         )
+        if not source.endswith("/"):
+            source += "/"
+        if not target.endswith("/"):
+            target += "/"
         call_args += ["rsync", "-r", "--delete", source, target]
         if not quiet or dryrun:
             print(" ".join(call_args))
