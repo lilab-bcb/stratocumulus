@@ -57,7 +57,10 @@ def main(argsv):
         help=argparse.SUPPRESS,
     )
     parser.add_argument(
-        "--quiet", dest="quiet", action="store_true", help="Hide the underlying command."
+        "--quiet",
+        dest="quiet",
+        action="store_true",
+        help="Hide the underlying command.",
     )
     parser.add_argument(
         "--dryrun",

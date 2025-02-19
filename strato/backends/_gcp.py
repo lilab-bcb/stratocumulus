@@ -1,5 +1,5 @@
 import shutil
-from subprocess import check_call, DEVNULL
+from subprocess import DEVNULL, check_call
 
 
 class GCPBackend:
@@ -11,8 +11,8 @@ class GCPBackend:
             "gcloud",
             "storage",
             "--no-user-output-enabled",
-            #"-o",
-            #"GSUtil:parallel_composite_upload_threshold=150M",
+            # "-o",
+            # "GSUtil:parallel_composite_upload_threshold=150M",
         ]
 
     def copy(self, recursive, ionice, filenames, quiet, dryrun):

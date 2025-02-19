@@ -56,7 +56,10 @@ def main(argsv):
         help="AWS profile. Only works for aws backend, and use the default profile if not provided.",
     )
     parser.add_argument(
-        "--quiet", dest="quiet", action="store_true", help="Hide the underlying command."
+        "--quiet",
+        dest="quiet",
+        action="store_true",
+        help="Hide the underlying command.",
     )
     parser.add_argument(
         "--dryrun",
