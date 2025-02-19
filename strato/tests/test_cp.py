@@ -35,7 +35,7 @@ def test_cp_dir_gcp(capsys):
 
 def test_cp_file_local(capsys):
     cp.main(["file1", "/bar/foo", "--dryrun"])
-    assert "cp file1 /bar/foo\n" == capsys.readouterr().out
+    assert "mkdir -p /bar\ncp file1 /bar/foo\n" == capsys.readouterr().out
 
 
 def test_cp_dir_local(capsys):
