@@ -10,17 +10,17 @@ example_text = """Examples:
   strato cp s3://my-bucket/source_folder/*.zip /target_folder/
 
   # GCP upload
-  strato cp -m -r --ionice file1 folder2 gs://my-bucket/target_folder/
+  strato cp -r --ionice file1 folder2 gs://my-bucket/target_folder/
   # GCP download
   mkdir /target_folder
-  strato cp -m gs://my-bucket/source_folder/*.zip /target_folder/
+  strato cp gs://my-bucket/source_folder/*.zip /target_folder/
 
   # On local machine
   strato cp -r file1 folder2 /target_folder/
 """
 
 
-def copy_files(recursive, parallel, ionice, filenames, profile, quiet, dryrun):
+def copy_files(recursive, ionice, filenames, profile, quiet, dryrun):
     backend = get_backend(filenames)
 
     if backend == "aws":
@@ -32,7 +32,7 @@ def copy_files(recursive, parallel, ionice, filenames, profile, quiet, dryrun):
         from strato.backends import GCPBackend
 
         be = GCPBackend()
-        be.copy(recursive, parallel, ionice, filenames, quiet, dryrun)
+        be.copy(recursive, ionice, filenames, quiet, dryrun)
     else:
         from strato.backends import LocalBackend
 
@@ -57,7 +57,7 @@ def main(argsv):
         "-m",
         dest="parallel",
         action="store_true",
-        help="Run operations in parallel. Only available for GCP backend.",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--ionice",
@@ -73,7 +73,10 @@ def main(argsv):
         help="AWS profile. Only works for aws backend, and use the default profile if not provided.",
     )
     parser.add_argument(
-        "--quiet", dest="quiet", action="store_true", help="Hide the underlying command."
+        "--quiet",
+        dest="quiet",
+        action="store_true",
+        help="Hide the underlying command.",
     )
     parser.add_argument(
         "--dryrun",
@@ -88,7 +91,6 @@ def main(argsv):
     args = parser.parse_args(argsv)
     copy_files(
         args.recursive,
-        args.parallel,
         args.ionice,
         args.files,
         args.profile,

@@ -57,7 +57,8 @@ class LocalBackend:
         if shutil.which("rsync") is None:
             raise Exception("rsync is not installed!")
         # target = os.path.dirname(target)
-        os.makedirs(target, exist_ok=True)
+        if not dryrun:
+            os.makedirs(target, exist_ok=True)
         call_args = (
             ["ionice", "-c", "2", "-n", "7"]
             if ionice and (shutil.which("ionice")) is not None

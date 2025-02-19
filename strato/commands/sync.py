@@ -5,12 +5,12 @@ from strato.commands.util import get_backend
 
 example_text = """Examples:
   strato sync source_folder s3://my-bucket/target_folder
-  strato sync -m --ionice source_folder gs://my-bucket/target_folder
+  strato sync --ionice source_folder gs://my-bucket/target_folder
   strato sync source_folder target_folder
 """
 
 
-def synchronize_folders(parallel, ionice, source, target, profile, quiet, dryrun):
+def synchronize_folders(ionice, source, target, profile, quiet, dryrun):
     backend = get_backend([source, target])
 
     if backend == "aws":
@@ -22,7 +22,7 @@ def synchronize_folders(parallel, ionice, source, target, profile, quiet, dryrun
         from strato.backends import GCPBackend
 
         be = GCPBackend()
-        be.sync(parallel, ionice, source, target, quiet, dryrun)
+        be.sync(ionice, source, target, quiet, dryrun)
     else:
         from strato.backends import LocalBackend
 
@@ -40,7 +40,7 @@ def main(argsv):
         "-m",
         dest="parallel",
         action="store_true",
-        help="Run operations in parallel. Only available for GCP backend.",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--ionice",
@@ -56,7 +56,10 @@ def main(argsv):
         help="AWS profile. Only works for aws backend, and use the default profile if not provided.",
     )
     parser.add_argument(
-        "--quiet", dest="quiet", action="store_true", help="Hide the underlying command."
+        "--quiet",
+        dest="quiet",
+        action="store_true",
+        help="Hide the underlying command.",
     )
     parser.add_argument(
         "--dryrun",
@@ -68,5 +71,5 @@ def main(argsv):
 
     args = parser.parse_args(argsv)
     synchronize_folders(
-        args.parallel, args.ionice, args.source, args.target, args.profile, args.quiet, args.dryrun
+        args.ionice, args.source, args.target, args.profile, args.quiet, args.dryrun
     )

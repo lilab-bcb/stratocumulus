@@ -1,5 +1,5 @@
 from strato.commands import rm
-from strato.tests.helpers import gsutil
+from strato.tests.helpers import gcloud
 
 
 def test_rm_aws(capsys):
@@ -16,12 +16,12 @@ def test_rm_aws_recursive(capsys):
 
 def test_rm_gcp(capsys):
     rm.main(["gs://foo/bar/", "--dryrun"])
-    assert gsutil + " rm gs://foo/bar/\n" == capsys.readouterr().out
+    assert gcloud + " rm gs://foo/bar/\n" == capsys.readouterr().out
 
 
 def test_rm_gcp_recursive(capsys):
     rm.main(["gs://foo/bar/", "--dryrun", "--recursive"])
-    assert gsutil + " rm -r gs://foo/bar/\n" == capsys.readouterr().out
+    assert gcloud + " rm -r gs://foo/bar/\n" == capsys.readouterr().out
 
 
 def test_rm_local(capsys):
