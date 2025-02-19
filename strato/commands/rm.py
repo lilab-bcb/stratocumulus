@@ -5,12 +5,12 @@ from strato.commands.util import get_backend
 
 example_text = """Examples:
   strato rm s3://my-bucket/file1 s3://my-bucket/folder2/
-  strato rm -m gs://my-bucket/file1 gs://my-bucket/folder2 gs://my-bucket/folder3/*.zip
+  strato rm gs://my-bucket/file1 gs://my-bucket/folder2 gs://my-bucket/folder3/*.zip
   strato rm file1 folder2
 """
 
 
-def delete_files(recursive, parallel, filenames, profile, quiet, dryrun):
+def delete_files(recursive, filenames, profile, quiet, dryrun):
     backend = get_backend(filenames)
 
     if backend == "aws":
@@ -22,7 +22,7 @@ def delete_files(recursive, parallel, filenames, profile, quiet, dryrun):
         from strato.backends import GCPBackend
 
         be = GCPBackend()
-        be.delete(recursive, parallel, filenames, quiet, dryrun)
+        be.delete(recursive, filenames, quiet, dryrun)
     else:
         from strato.backends import LocalBackend
 
@@ -54,7 +54,7 @@ def main(argsv):
         "-m",
         dest="parallel",
         action="store_true",
-        help="Run operations in parallel. Only available for GCP backend.",
+        help=argparse.SUPPRESS,
     )
     parser.add_argument(
         "--quiet", dest="quiet", action="store_true", help="Hide the underlying command."
@@ -69,4 +69,4 @@ def main(argsv):
     )
 
     args = parser.parse_args(argsv)
-    delete_files(args.recursive, args.parallel, args.files, args.profile, args.quiet, args.dryrun)
+    delete_files(args.recursive, args.files, args.profile, args.quiet, args.dryrun)

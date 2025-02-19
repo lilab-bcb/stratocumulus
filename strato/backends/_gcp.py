@@ -1,20 +1,21 @@
 import shutil
-from subprocess import check_call
+from subprocess import check_call, DEVNULL
 
 
 class GCPBackend:
     def __init__(self):
-        if shutil.which("gsutil") is None:
+        if shutil.which("gcloud") is None:
             raise Exception("google-cloud-sdk is not installed!")
         self._backend = "gcp"
         self._call_prefix = [
-            "gsutil",
-            "-q",
-            "-o",
-            "GSUtil:parallel_composite_upload_threshold=150M",
+            "gcloud",
+            "storage",
+            "--no-user-output-enabled",
+            #"-o",
+            #"GSUtil:parallel_composite_upload_threshold=150M",
         ]
 
-    def copy(self, recursive, parallel, ionice, filenames, quiet, dryrun):
+    def copy(self, recursive, ionice, filenames, quiet, dryrun):
         # FIXME make local target directories to mimic behavior of aws and local backends
         call_args = (
             ["ionice", "-c", "2", "-n", "7"]
@@ -22,8 +23,6 @@ class GCPBackend:
             else []
         )
         call_args += self._call_prefix
-        if parallel:
-            call_args.append("-m")
         call_args.append("cp")
         if recursive:
             call_args.append("-r")
@@ -33,7 +32,7 @@ class GCPBackend:
         if not dryrun:
             check_call(call_args)
 
-    def sync(self, parallel, ionice, source, target, quiet, dryrun):
+    def sync(self, ionice, source, target, quiet, dryrun):
         # If target folder is local.
         if len(target.split("://")) == 1:
             import os
@@ -47,18 +46,14 @@ class GCPBackend:
             else []
         )
         call_args += self._call_prefix
-        if parallel:
-            call_args.append("-m")
-        call_args.extend(["rsync", "-d", "-r", source, target])
+        call_args.extend(["rsync", "--delete-unmatched-destination-objects", "-r", source, target])
         if not quiet or dryrun:
             print(" ".join(call_args))
         if not dryrun:
             check_call(call_args)
 
-    def delete(self, recursive, parallel, filenames, quiet, dryrun):
+    def delete(self, recursive, filenames, quiet, dryrun):
         call_args = self._call_prefix.copy()
-        if parallel:
-            call_args.append("-m")
         call_args.append("rm")
         if recursive:
             call_args.append("-r")
@@ -70,11 +65,5 @@ class GCPBackend:
 
     def stat(self, filename):
         assert filename.startswith("gs://"), "Must be a GS URI!"
-        is_folder = True if filename[-1] == "/" else False
-
-        if is_folder:
-            call_args = ["gsutil", "-q", "stat", filename + "*"]
-        else:
-            call_args = ["gsutil", "-q", "stat", filename]
-
-        check_call(call_args)
+        call_args = ["gcloud", "storage", "ls", filename]
+        check_call(call_args, stdout=DEVNULL)
