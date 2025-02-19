@@ -5,6 +5,12 @@ repos:
       # - id: double-quote-string-fixer  # for single quotes: uncomment and add black config “skip-string-normalization”
       - id: trailing-whitespace
       - id: end-of-file-fixer
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.6
+    hooks:
+      - id: ruff
+        args: [ --fix ]
+      - id: ruff-format
   - repo: https://github.com/psf/black
     rev: 24.4.2
     hooks:
