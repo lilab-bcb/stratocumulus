@@ -55,10 +55,10 @@ This command copies file(s) or folder(s). See examples below::
    strato cp s3://my-bucket/source_folder/*.zip /target_folder/
 
    # GCP upload
-   strato cp -m -r --ionice file1 folder2 gs://my-bucket/target_folder/
+   strato cp -r --ionice file1 folder2 gs://my-bucket/target_folder/
    # GCP download
    mkdir /target_folder
-   strato cp -m gs://my-bucket/source_folder/*.zip /target_folder/
+   strato cp gs://my-bucket/source_folder/*.zip /target_folder/
 
    # Local Machine
    strato cp -r file1 folder2 /target_folder/
@@ -69,7 +69,7 @@ Notice that:
 * For Google Cloud download, you'll have to explicitly create the target folder, and then run ``strato cp`` command.
 * Wildcards are acceptable.
 * ``-r`` option is not needed for AWS, and copying folders is always recursive.
-* ``-m`` and ``--ionice`` options only work for Google Cloud.
+* ``--ionice`` option only work for Google Cloud.
 
 For details on the options, try command ``strato cp -h``.
 
@@ -83,13 +83,13 @@ See examples below::
    # AWS
    strato sync source_folder s3://my-bucket/target_folder
    # GCP
-   strato sync -m --ionice source_folder gs://my-bucket/target_folder
+   strato sync --ionice source_folder gs://my-bucket/target_folder
    # Local Machine
    strato sync source_folder target_folder
 
 Notice that:
 
-* ``-m`` and ``--ionice`` options only work for Google Cloud.
+* ``--ionice`` option only work for Google Cloud.
 
 For details on the options, try command ``strato sync -h``.
 
@@ -101,13 +101,12 @@ This command deletes file(s) or folder(s). See examples below::
    # AWS
    strato rm s3://my-bucket/file1 s3://my-bucket/folder2/
    # GCP
-   strato rm -m gs://my-bucket/file1 gs://my-bucket/folder2 gs://my-bucket/folder3/*.zip
+   strato rm gs://my-bucket/file1 gs://my-bucket/folder2 gs://my-bucket/folder3/*.zip
    # Local Machine
    strato rm file1 folder2
 
 Notice that:
 
-* ``-m`` option only works for Google Cloud.
 * For AWS backend, wildcards are not yet accepted.
 
 For details on the options, try command ``strato rm -h``.
