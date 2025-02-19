@@ -1,7 +1,7 @@
 import pytest
 
 from strato.commands import cp
-from strato.tests.helpers import gsutil
+from strato.tests.helpers import gcloud
 
 
 def test_cp_file_aws(capsys):
@@ -25,12 +25,12 @@ def test_cp_dir_aws(capsys, trailing_slash):
 
 def test_cp_file_gcp(capsys):
     cp.main(["file1", "gs://foo/bar/", "--dryrun"])
-    assert gsutil + " cp file1 gs://foo/bar/\n" == capsys.readouterr().out
+    assert gcloud + " cp file1 gs://foo/bar/\n" == capsys.readouterr().out
 
 
 def test_cp_dir_gcp(capsys):
     cp.main(["dir1", "gs://foo/bar", "-r", "--dryrun"])
-    assert gsutil + " cp -r dir1 gs://foo/bar\n" == capsys.readouterr().out
+    assert gcloud + " cp -r dir1 gs://foo/bar\n" == capsys.readouterr().out
 
 
 def test_cp_file_local(capsys):
