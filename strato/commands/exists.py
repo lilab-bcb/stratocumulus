@@ -17,12 +17,12 @@ def check_status(filename, profile):
         from strato.backends import AWSBackend
 
         be = AWSBackend()
-        be.stat(filename, profile)
+        be.exists(filename, profile)
     elif backend == "gcp":
         from strato.backends import GCPBackend
 
         be = GCPBackend()
-        be.stat(filename)
+        be.exists(filename)
     else:
         from strato.backends import LocalBackend
 

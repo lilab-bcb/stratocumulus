@@ -101,7 +101,7 @@ class AWSBackend:
             if not dryrun:
                 check_call(subcall_args)
 
-    def stat(self, filename, profile):
+    def exists(self, filename, profile):
         assert filename.startswith("s3://"), "Must be an S3 URI!"
 
         call_args = self._call_prefix.copy()

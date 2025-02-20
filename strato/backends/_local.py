@@ -2,7 +2,7 @@ import os
 import glob
 import shutil
 from pathlib import Path
-from subprocess import check_call
+from subprocess import check_call, DEVNULL
 
 
 class LocalBackend:
@@ -86,4 +86,4 @@ class LocalBackend:
 
     def stat(self, filename):
         call_args = ["stat", filename]
-        check_call(call_args)
+        check_call(call_args, stdout=DEVNULL)
