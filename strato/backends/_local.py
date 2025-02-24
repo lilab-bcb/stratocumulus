@@ -2,7 +2,7 @@ import os
 import glob
 import shutil
 from pathlib import Path
-from subprocess import check_call, DEVNULL
+from subprocess import DEVNULL, check_call
 
 
 class LocalBackend:
