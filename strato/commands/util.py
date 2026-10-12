@@ -28,7 +28,7 @@ def get_backend(paths):
         elif scheme == "file":
             backend = "local"
         else:
-            raise ValueError("Unknown scheme {}".format(scheme))
+            raise ValueError(f"Unknown scheme {scheme}")
         backends.add(backend)
     if len(backends) == 1:
         return backends.pop()
